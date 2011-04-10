@@ -5,8 +5,9 @@ CFLAGS = -g -Wall -std=c99 -pedantic
 
 ## Programming Name and Source file
 ## Change BASE name depending on file you're working on.
-BASE = ch09pp04
-PROG = $(BASE)~
+BASE = ch09pp09
+BIN_DIR = ../bin/
+PROG = $(BIN_DIR)$(BASE)
 SRC = $(BASE).c
 
 ## Object files have the same name name as .c files, but with .o
