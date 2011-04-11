@@ -42,6 +42,7 @@
 #define MAX_WORD_LEN 80
 #define ALPHABET 26
 
+/* A pair of dice and their sum */
 struct dice
 {
 	int die_1;
@@ -72,7 +73,7 @@ int main(void)
 		printf("Play again? (y/n): ");
 		scanf("%1s", choice);
 	}
-	printf("wins: %d\nlosses: %d\n", wins, losses);
+	printf("wins: %d losses: %d\n", wins, losses);
 
 	return 0;
 }
@@ -85,14 +86,12 @@ struct dice roll_dice(void)
 	struct dice roll;
 
 	/* printf("roll_dice()\n"); */
-	printf("Roll dice...\n");
+	printf("\nRoll dice...\n");
 	roll.die_1 = (rand() % 6) + 1;
 	roll.die_2 = (rand() % 6) + 1;
 	roll.dice_sum = roll.die_1 + roll.die_2;
-	printf("\ndie_1:\t%d\ndie_2:\t%d\ntotal:\t%2d\n",
-							roll.die_1,
-							roll.die_2,
-							roll.dice_sum);
+	printf("| %d |\t| %d |\n", roll.die_1, roll.die_2);
+	printf("You rolled: %d\n", roll.dice_sum);
 	return roll;
 }
 
@@ -102,11 +101,9 @@ struct dice roll_dice(void)
 bool play_game(void)
 {
 	bool win = false;
-	bool point_result = false;
-	int point = 0;
+	bool win_point = false; /* if we don't win or lose on first roll */
+	int point = 0; 		   /* the dice roll sume is the "point" */
 	struct dice game;
-
-	/* printf("play_game()\n"); */
 
 	game = roll_dice();
 
@@ -119,22 +116,22 @@ bool play_game(void)
 	}
 
 	if (point) {
-		printf("POINT!!\n");
+		printf("Your point is %d\n", point);
 		do {
 			game = roll_dice();
 			if (game.dice_sum == 7) {
-				point_result = true;
+				win_point = true;
 				win = false;
 				printf("Bad luck, Snake Eyes!\n");
 			}
 			if (game.dice_sum == point) {
-				point_result = true;
+				win_point = true;
 				win = true;
 			}
-		} while (point_result == false);
+		} while (win_point == false);
 	}
 
-	printf("You %s.\n", win ? "Won" : "Lost");
+	printf("You %s\n", win ? "Won!" : "Lost... :-(");
 
 	return win;
 }
