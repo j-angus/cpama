@@ -19,17 +19,18 @@
 #define CARD_TYPE 2
 #define RANK 0
 #define SUIT 1
+#define ROYAL 50
+#define STRAIGHT 10
+#define ACE_LOW_STRAIGHT 18
 
 /* external variables */
-bool straight, flush, four, three;
+bool royal, straight, flush, four, three;
 int pairs;	 /* can be 0, 1, or 2 */
 int hand[NUM_CARDS][CARD_TYPE]; /* 5 card hand, hand[x][0] == rank
 						hand[x][1] == suit */
 
 /* prototypes */
-/* void read_cards(int[], int []); */
 void read_cards(void);
-/* void analyze_hand(int[], int[]); */
 void analyze_hand(void);
 void print_result(void);
 
@@ -40,8 +41,6 @@ void print_result(void);
 int main(void)
 {
 	PRINT_FILE_INFO
-	int num_in_rank[NUM_RANKS];
-	int num_in_suit[NUM_SUITS];
 	for (;;) {
 		read_cards();
 		analyze_hand();
@@ -77,6 +76,7 @@ void read_cards(void)
 		rank_ch = getchar();
 		switch (rank_ch) {
 			case '0': exit(EXIT_SUCCESS);
+
 			case '2': rank = 0; break;
 			case '3': rank = 1; break;
 			case '4': rank = 2; break;
@@ -109,9 +109,9 @@ void read_cards(void)
 			printf("Bad card; ignored.\n");
 		else {
 			/* check for duplicate card */
-			for (card = 0; card < cards_read; ++ card)
+			for (card = 0; card < cards_read; ++card)
 				if ((hand[card][RANK] == rank) &&
-					(hand[cards_read][SUIT] == suit))
+					(hand[card][SUIT] == suit))
 						duplicate = true;
 			if (duplicate)
 				printf("Duplicate card; ignored.\n");
@@ -124,6 +124,7 @@ void read_cards(void)
 	}
 }
 
+
 /**********************************************************
  * analyze_hand: Determines whether the hand contains a	  *
  * straight, a flush, four-of-a-kind,			  *
@@ -134,43 +135,73 @@ void read_cards(void)
  **********************************************************/
 void analyze_hand(void)
 {
-	int num_consec = 0;
-	int rank, suit;
+	int card;
+	int rank_sum = 0; /* add ranks to see if we have a straight */
 
+	royal = false;
 	straight = false;
-	flush = false;
+	flush = true;
 	four = false;
 	three = false;
 	pairs = 0;
 
 	/* check for flush */
-	for (int card = 0; card < NUM_CARDS - 1; ++card) {
-		printf("card[%d][SUIT] = %d\n", card, hand[card][SUIT]);
-		if (hand[card][SUIT] == hand[card + 1][SUIT])
-			;
-		else
+	for (card = 0; card < NUM_CARDS - 1; ++card) {
+		if (hand[card][SUIT] != hand[card + 1][SUIT]) {
+			flush = false;
 			break;
-		flush = true;
+		}
 	}
 
-	/* check for straight */
-	/*
-	rank = 0;
-	while (num_in_rank[rank] == 0) rank++;
-	for (; rank < NUM_RANKS && num_in_rank[rank] > 0; rank++)
-		num_consec++;
-	if (num_consec == NUM_CARDS) {
+	/* check for a royal straight: T,J,Q,K,A
+	 * T + J + Q + K + A ==  50
+	 */
+	for (card = 0; card < NUM_CARDS; ++card)
+		rank_sum += hand[card][RANK];
+		if (rank_sum == ROYAL)
+			royal = true;
+
+	if (flush && royal) {
+		return;
+	}
+	/* ace high stright */
+	if (royal) {
 		straight = true;
 		return;
 	}
-*/
-	/* check for 4-of-a-kind, 3-of-a-kind, and pairs */
-/*	for (rank = 0; rank < NUM_RANKS; rank++) {
-		if (num_in_rank[rank] == 4) four = true;
-		if (num_in_rank[rank] == 3) three = true;
-		if (num_in_rank[rank] == 2) pairs++;
+
+	/* check for straight */
+	rank_sum = 0;
+
+	for (card = 0; card < NUM_CARDS; ++card) {
+		if (hand[card][RANK] == 12) /* ace */
+			rank_sum += 12;
+		else
+			rank_sum += (hand[card][RANK] % 5);
 	}
-*/
+	if ((rank_sum == STRAIGHT) || (rank_sum == ACE_LOW_STRAIGHT)) {
+		straight = true;
+		return;
+	}
+
+	int same = 0;
+	for (int i = 0; i < NUM_CARDS; ++i) {
+		for (int j = 0; j <  NUM_CARDS; ++j) {
+			if (i != j) {
+				if (hand[i][RANK] == hand[j][RANK]) {
+					++same;
+				}
+			}
+		}
+	}
+	switch (same) {
+		case 12: four  = true; break;
+		case  8: three = true; pairs = 1;
+		case  6: three = true; break;
+		case  4: pairs = 2; break;
+		case  2: pairs = 1; break;
+		default: break;
+	}
 }
 
 /**********************************************************
@@ -181,7 +212,8 @@ void analyze_hand(void)
  **********************************************************/
 void print_result(void)
 {
-	if (straight && flush) printf("Straight flush");
+	if (royal && flush) printf("Royal flush");
+	else if (straight && flush) printf("Straight flush");
 	else if (four) printf("Four of a kind");
 	else if (three && pairs == 1) printf("Full house");
 	else if (flush) printf("Flush");
