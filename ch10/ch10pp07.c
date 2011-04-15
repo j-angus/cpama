@@ -26,13 +26,6 @@
 
 /* external variables */
 int digit[MAX_DIGITS]; /* user supplied numbers to display */
-const char segment_parts[MAX_SEGMENTS] = {'_', '|', '|', '_', '|', '|', '_'};
-/*
-	{" _ ", "   ", " _ ", " _ ", "   ", " _ ", "   ", " _ ", " _ ", " _ "},
-	{"| |", "  |", " _|", " _|", "|_|", "|_ ", "|_ ", "  |", "|_|", "|_|"},
-	{"|_|", "  |", "|_ ", " _|", "  |", " _|", "|_|", "  |", "|_|", "  |"}
-};
-*/
 const int segments[MAX_DIGITS][MAX_SEGMENTS] =
 {
 	{1,1,1,1,1,1,0}, {0,1,1,0,0,0,0}, {1,1,0,1,1,0,1}, {1,1,1,1,0,0,1},
@@ -71,34 +64,12 @@ int main(void)
 			++num;
 		}
 	}
-
+	/* place numbers into array in seven segment format */
 	for (int i = 0; i < num; ++i)
 		process_digit(digit[i], i);
 
 	print_digit_array();
 
-	/* first row segments */
-	for (int i = 0; i < num; ++i) {
-		printf(" %c ", segments[digit[i]][0] ? segment_parts[06] : ' ');
-		printf(" ");
-	}
-	printf("\n");
-	/* second row segments */
-	for (int i = 0; i < num; ++i) {
-		printf("%c", segments[digit[i]][5] ? segment_parts[5] : ' ');
-		printf("%c", segments[digit[i]][6] ? segment_parts[6] : ' ');
-		printf("%c", segments[digit[i]][1] ? segment_parts[1] : ' ');
-		printf(" ");
-	}
-	printf("\n");
-	/* third row segments */
-	for (int i = 0; i < num; ++i) {
-		printf("%c", segments[digit[i]][4] ? segment_parts[4] : ' ');
-		printf("%c", segments[digit[i]][3] ? segment_parts[3] : ' ');
-		printf("%c", segments[digit[i]][2] ? segment_parts[2] : ' ');
-		printf(" ");
-	}
-	printf("\n");
 	return 0;
 }
 
