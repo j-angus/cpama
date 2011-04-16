@@ -1,0 +1,83 @@
+setup git repository for storing 'c' source code.
+--------------------------------------------------
+
+Main repository is stored on GitHub server: github.com
+
+ssh passwd: guitarz1i
+github login: duff.angus@gmail.com
+github passwd: guitarz1
+
+setup git:
+------------
+Global setup:
+
+  git config --global user.name "Jason Angus"
+  git config --global user.email jaduffa@gmail.com
+  git config --global color.ui true
+
+Next steps:
+
+mkdir ~/swdev
+cd ~/swdev
+
+Best to login to github first and check out help section there for clear instructions.
+
+Follow setting up ssh key instructions first: http://help.github.com/linux-set-up-git/
+
+change to ~/swdev on local computer.
+
+git clone git@github.com:j-angus/c.git
+
+creates directory: ~/swdev/c
+
+change to ~/swdev/c
+
+This is the directory for all c development.
+
+Do some work.
+
+add files to be tracked:
+
+$ git add <path to files>
+
+# Let's only store *.c source files and other informational text files. No compiled or object files for now.
+
+save and commit changes to local git repository.
+
+$ git commit
+
+will commit all files added in the last step.
+
+Or we can add and commit previously added files with:
+$ git commit -am "commit comment"
+
+push and merge changes to remote, github, repository.
+
+
+to update on github:
+
+$ git push -u origin master
+
+
+After we're all setup locally and we want to get the latest revisions from github:
+-----------------------------------------------------------------------------------
+
+check to see if we are up to date or not:
+
+$ git remote show origin
+
+get changes from remote but don't merge:
+$ git fetch
+look at the differences after a fetch:
+$ git diff
+$ git show
+
+if we're happy with changes, we can merge this way:
+$ git merge origin/master
+
+we can fetch and merge in one step with:
+$ git pull origin
+
+or even:
+$ git pull
+
