@@ -8,10 +8,10 @@
 	printf("C Programming, A Modern Approach: %s\n", THIS_FILE);
 
 /* Write the folowing function:
- * void split_time(long local_sec, int *hr, int *min, int *sec);
- * total_sec is a time represented as the number of seconds since midnight.
- * hr, min, and sec are pointers to variables in which the function will store
- * the equivalent time in hours (0-23), minutes (0-59), and seconds (0-60).
+ * void find_two_largest(int a[], int n, int *largest, int *second_largest);
+ * When passed an array a of length 'n', the function will search a for its
+ * largest and second-largest elements, storing them in the variables pointed to
+ * by largest and second_largest.
  */
 
 #include <stdbool.h>	 /* C99 only */
@@ -21,14 +21,13 @@
 #include <time.h>
 
 /* defines */
-#define HR_TO_SEC 3600
-#define MIN_TO_SEC 60
+#define MAX 50
 
 /* external variables */
 
 /* function prototypes */
-long seconds_since_midnight(void);
-void split_time(long local_sec, int *hr, int *min, int *sec);
+void random_fill(int length, int a[length], int limit);
+void find_two_largest(int a[], int n, int *largest, int *second_largest);
 
 /* main() */
 /********************************************************
@@ -38,14 +37,18 @@ int main(void)
 {
 
 	PRINT_FILE_INFO
-	long midnight_seconds = seconds_since_midnight();
-	printf("Seconds since midnight: %ld\n", midnight_seconds);
-	int hour, min, sec;
 
-	split_time(midnight_seconds, &hour, &min, &sec);
+	int largest, second_largest;
+	int a[MAX];
 
-	printf("Time since midnight...\n");
-	printf("%02d:%02d:%02d\n", hour, min, sec);
+	random_fill(MAX, a, MAX);
+
+	for(int i = 0; i < MAX; ++i)
+		printf("a[%d]: %d\n", i, a[i]);
+
+	find_two_largest(a, MAX, &largest, &second_largest);
+	printf("largest:\t%d\nsecond_largest:\t%d\n", largest,
+							second_largest);
 
 	return 0;
 }
@@ -53,30 +56,38 @@ int main(void)
 /* function definitions */
 
 /**
- * Return the number of seconds since midnight.
+ * fill an array with random integers
  */
-long seconds_since_midnight(void)
+void random_fill(int length, int a[length], int limit)
 {
-	long seconds = 0; /* stores the number of seconds since midnight */
+	srand((unsigned) time(NULL)); /* seed random generator */
 
-	time_t current = time(NULL); /* get the current time */
-	struct tm *time_ptr = localtime(&current);
-
-	seconds += (time_ptr->tm_hour * 3600);
-	seconds += (time_ptr->tm_min * 60);
-	seconds += (time_ptr->tm_sec);
-
-	return seconds;
+	for (int i = 0; i < length; ++i)
+		a[i] = rand() % limit;
+	return;
 }
 
-
-void split_time(long local_sec, int *hr, int *min, int *sec)
+/**
+ * Find largest and second-largest elements in array a[].
+ */
+void find_two_largest(int a[], int n, int *largest, int *second_largest)
 {
-	*hr = local_sec / HR_TO_SEC;
-	local_sec %= HR_TO_SEC;
-	*min = local_sec / MIN_TO_SEC;
-	local_sec %= MIN_TO_SEC;
-	*sec = local_sec;
+	int smallest = a[0];
+	for (int i = 0; i < n; ++i)
+		if (a[i] < smallest)
+			smallest = a[i];
+
+	*largest = smallest;
+	*second_largest = smallest;
+
+	for (int i = 0; i < n; ++i) {
+		if (a[i] > *largest) {
+			*second_largest = *largest;
+			*largest = a[i];
+		}
+		else if ((a[i] > *second_largest) && (a[i] < *largest))
+				*second_largest = a[i];
+	}
 
 	return;
 }
