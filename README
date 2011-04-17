@@ -4,7 +4,7 @@ setup git repository for storing 'c' source code.
 Main repository is stored on GitHub server: github.com
 
 ssh passwd: guitarz1i
-github login: duff.angus@gmail.com
+github login: j-angus 
 github passwd: guitarz1
 
 setup git:
@@ -26,13 +26,13 @@ Follow setting up ssh key instructions first: http://help.github.com/linux-set-u
 
 change to ~/swdev on local computer.
 
-git clone git@github.com:j-angus/c.git
+git clone git@github.com:j-angus/cpama.git
 
-creates directory: ~/swdev/c
+creates directory: cpama
 
-change to ~/swdev/c
+change to cpama
 
-This is the directory for all c development.
+This is the directory for all cpama development.
 
 Do some work.
 
@@ -59,8 +59,8 @@ to update on github:
 $ git push -u origin master
 
 
-After we're all setup locally and we want to get the latest revisions from github:
------------------------------------------------------------------------------------
+When we want to get the latest revisions from github:
+------------------------------------------------------
 
 check to see if we are up to date or not:
 

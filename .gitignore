@@ -5,5 +5,5 @@
 # ignore objects and archives, anywhere in the tree.
 *.[oa]
 # compiled binaries 
-bin/
+bin/*
 
