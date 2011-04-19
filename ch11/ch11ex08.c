@@ -34,7 +34,6 @@ int *find_largest(int a[], int n);
  ********************************************************/
 int main(void)
 {
-
 	PRINT_FILE_INFO
 
 	int *lrg_ptr; /* stores index to largest element within a[] */
@@ -46,9 +45,11 @@ int main(void)
 		printf("a[%d]: %d\n%s", i, a[i], i == MAX -1 ? "\n" : "");
 
 	lrg_ptr = find_largest(a, MAX);
-	printf("*lrg_ptr:\t%d\n", *lrg_ptr);
-	printf("lrg_ptr - a:\t%ld\n", lrg_ptr - a);
+	printf("*lrg_ptr:\t %02d\n\n", *lrg_ptr);
 
+	printf("lrg_ptr: %ld, &a[0]: %ld, a: %ld\n", lrg_ptr, &a[0], a);
+	printf("lrg_ptr - &a[0]: %02ld\n", lrg_ptr - &a[0]);
+	printf("lrg_ptr - a[0]:\t %02ld\n", lrg_ptr - a);
 
 	return 0;
 }
@@ -72,15 +73,14 @@ void random_fill(int length, int a[length], int limit)
  */
 int *find_largest(int a[], int n)
 {
-	int largest = a[0];
+	/* int largest = a[0]; */
 	int *lrg_ptr = &a[0];
 
 	for (int i = 0; i < n; ++i) {
-		if (a[i] > largest) {
-			largest = a[i];
+		if (a[i] > *lrg_ptr) {
+			/* largest = a[i]; */
 			lrg_ptr = &a[i];
 		}
-
 	}
 
 	return lrg_ptr;
