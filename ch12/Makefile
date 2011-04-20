@@ -5,7 +5,7 @@ CFLAGS = -g -Wall -std=c99 -pedantic
 
 ## Programming Name and Source file
 ## Change BASE name depending on file you're working on.
-BASE = ch11pp01
+BASE = ch12ex01
 BIN_DIR = ../bin/
 PROG = $(BIN_DIR)$(BASE)
 SRC = $(BASE).c
