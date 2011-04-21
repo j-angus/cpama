@@ -50,7 +50,7 @@ int main(void)
 	middle = low + ((int)(high - low) / 2);
 	printf("middle: %ld, low: %ld, high: %ld\n", middle, low, high);
 	printf("middle = low + ((int)(high - low) / 2): %ld\n",
-					middle = low + ((int)(high - low) / 2));
+				middle = low + ((int)(high - low) / 2));
 
 	/* ch12ex04 */
 	#define N 10
