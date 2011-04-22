@@ -3,12 +3,12 @@
  * By K. N. King					 *
  *********************************************************/
 
-#define THIS_FILE "ch12pp01a.c, page 275"
+#define THIS_FILE "ch12pp02b.c, page 276"
 #define PRINT_FILE_INFO \
 	printf("C Programming, A Modern Approach: %s\n", THIS_FILE);
 
 /* Write a program that reads a message, then checks whether it's a
-   palindrome.
+   palindrome. Use pointers to process char array.
  */
 
 #include <stdbool.h> /* C99 only */
@@ -32,37 +32,33 @@
 int main(void)
 {
 	PRINT_FILE_INFO
-	int i, ch = 0;
+	int ch = 0;
 	char message[MAX_LENGTH];
+	char *msg_ptr = &message[0];
 
 	printf("Enter a message: ");
-	for (i = 0; i < MAX_LENGTH -1; ++i) {
-		if ((ch = getchar()) != '\n') {
-			if (isalpha(ch))
-				message[i] = ch;
-			else
-				--i;
-		}
-		else break;
+	while (msg_ptr < (message + MAX_LENGTH -1) &&
+			(ch = getchar()) != '\n') {
+		if (isalpha(ch))
+			*(msg_ptr++) = ch;
 	}
-	message[i] = '\0';
+	*msg_ptr = '\0';
 
 	/* determine if message is a palindrome */
 	bool palindrome = true;
-	int head = 0, tail = i - 1;
+	char *head = message;
 
 	/* if just '\n' entered, message only contains '\0' */
-	if (message[0]) {
-		while (head < tail) {
-			printf("message[%d]: %c, message[%d]: %c\n",
-					head, message[head],
-					tail, message[tail]);
+	if (head < msg_ptr) {
+		--msg_ptr; /* point to char before last char: \0 */
+		while (head < msg_ptr) {
+			printf("*head: %c, *msg_ptr: %c\n", *head, *msg_ptr);
 
-			if (message[head] != message[tail]) {
+			if (*head != *msg_ptr) {
 				palindrome = false;
 				break;
 			}
-			++head, --tail;
+			++head, --msg_ptr;
 		}
 		printf("message '%s' is %s a palindrome\n", message,
 			palindrome ? "\b" : "not");
