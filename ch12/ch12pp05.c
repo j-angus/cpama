@@ -21,7 +21,6 @@ int main(void)
 	char sentence[LENGTH]; /* array to store user entered sentence */
 	char *s_ptr; /* pointer to sentence */
 	char term = '\0'; /* holds end of sentence terminator */
-	int i, j; /* array index */
 
 	/* Initialise array */
 	for (s_ptr = sentence; s_ptr < (sentence + LENGTH); ++s_ptr)
@@ -37,29 +36,39 @@ int main(void)
 			break;
 		}
 	}
-	*s_ptr = '\0';
+	*(++s_ptr) = '\0'; /* NUL terminate sentence to create a string */
+
+	char *s_tail = --s_ptr; /* a pointer to the end of the sentence */
+	char *w_head = --s_ptr; /* a pointer to the beginning of a word */
+	char *bound; /* pointer to word boundary */
 
 	printf("Reversal of sentence: ");
-
-	/* seek from end of array backwards to the last letter in the string */
-	i = LENGTH - 1;
-	while (sentence[i] != '\0')
-		--i;
-	j = i;
-	for (; i >= 0; --i) {
-		if (sentence[i] == ' ') {
-			for (int k = i + 1; k <=j; ++k)
-				printf("%c", sentence[k]);
-			printf("%c", sentence[i]);
-			j = i;
+	/* first we test if sentence only contains a terminator */
+	if (s_ptr != sentence) {
+		while (--w_head >= sentence) {
+			/* find beginning of word */
+			if (*w_head == ' ' || w_head == sentence) {
+				bound = w_head;
+				/* don't want to print leading ' ' */
+				if (*w_head == ' ')
+					++w_head;
+				while (w_head <= s_ptr) { /* print word */
+					if (!isspace(*w_head))
+						putchar(*w_head);
+					++w_head;
+				}
+				if (bound != sentence)
+					putchar(' ');
+				/* reset boundaries to search for next word */
+				s_ptr = --bound;
+				w_head = bound;
+			}
 		}
-		else if (sentence[j] == ' ')
-			j = i;
+		putchar(*s_tail);
 	}
-	for (i = 0; i <=j; ++i)
-		printf("%c", sentence[i]);
-
-	printf("%c\n", term);
+	else
+		printf("%s\n", sentence);
+	putchar('\n');
 
 	return 0;
 }
