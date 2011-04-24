@@ -1,70 +1,75 @@
 /*********************************************************
  * From C PROGRAMMING: A MODERN APPROACH, Second Edition *
- * By K. N. King                                         *
+ * By K. N. King					 *
  * Copyright (c) 2008, 1996 W. W. Norton & Company, Inc. *
- * All rights reserved.                                  *
+ * All rights reserved.					 *
  * This program may be freely distributed for class use, *
- * provided that this copyright notice is retained.      *
+ * provided that this copyright notice is retained.	 *
  *********************************************************/
 
 #define THIS_FILE "ch12p06.c, page 276"
 #define PRINT_FILE_INFO \
 	printf("C Programming, A Modern Approach: %s\n", THIS_FILE);
-/* use pointers to manipulate arrays */
-/* based on qsort.c (Chapter 9, page 207) */
-/* Sorts an array of integers using Quicksort algorithm */
+
+/* use pointers to manipulate arrays
+   based on qsort.c (Chapter 9, page 207)
+   Sorts an array of integers using Quicksort algorithm
+ */
 
 #include <stdio.h>
 
 #define N 10
 
-void quicksort(int a[], int low, int high);
-int split(int a[], int low, int high);
+void quicksort(int *low, int *high);
+int *split(int *low, int *high);
 
 int main(void)
 { PRINT_FILE_INFO
-  int a[N], i;
+	int a[N];
+	int *p = a;
 
-  printf("Enter %d numbers to be sorted: ", N);
-  for (i = 0; i < N; i++)
-    scanf("%d", &a[i]);
+	printf("Enter %d numbers to be sorted: ", N);
 
-  quicksort(a, 0, N - 1);
+	while (p < a + N)
+		scanf("%d", p++);
 
-  printf("In sorted order: ");
-  for (i = 0; i < N; i++)
-    printf("%d ", a[i]);
-  printf("\n");
+	quicksort(a, a + (N - 1));
 
-  return 0;
+	printf("In sorted order: ");
+
+	for (p = a; p < a + N; ++p)
+		printf("%d ", *p);
+	printf("\n");
+
+	return 0;
 }
 
-void quicksort(int a[], int low, int high)
+void quicksort(int *low, int *high)
 {
-  int middle;
+	int *middle;
 
-  if (low >= high) return;
-  middle = split(a, low, high);
-  quicksort(a, low, middle - 1);
-  quicksort(a, middle + 1, high);
+	if (low >= high) return;
+	middle = split(low, high);
+	quicksort(low, middle - 1);
+	quicksort(middle + 1, high);
 }
 
-int split(int a[], int low, int high)
+int *split(int *low, int *high)
 {
-  int part_element = a[low];
+	int part_element = *low;
 
-  for (;;) {
-    while (low < high && part_element <= a[high])
-      high--;
-    if (low >= high) break;
-    a[low++] = a[high];
+	for (;;) {
+		while (low < high && part_element <= *high)
+			high--;
+		if (low >= high) break;
+		*(low++) = *high;
 
-    while (low < high && a[low] <= part_element)
-      low++;
-    if (low >= high) break;
-    a[high--] = a[low];
-  }
+		while (low < high && *low <= part_element)
+			low++;
+		if (low >= high) break;
+		*(high--) = *low;
+	}
 
-  a[high] = part_element;
-  return high;
+	*high = part_element;
+	return high;
 }
