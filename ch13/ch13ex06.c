@@ -25,7 +25,7 @@
 /* function prototypes */
 int read_line(char str[], int n);
 void capitalise(int n, char str[n]);
-void censor(const char hide[], char str[]);
+void censor(char str[], const char hide[]);
 
 /* main() */
 /********************************************************
@@ -35,12 +35,12 @@ int main(void)
 {	PRINT_FILE_INFO
 	/* stores up to LINE_LEN char, allows space for null terminator */
 	char line[LINE_LEN + 1];
-	char hide_text[] = "foobar";
+	char hide_text[] = "foo";
 
 	printf("Enter a line of text: ");
 	read_line(line, LINE_LEN);
 
-	censor(hide_text, line);
+	censor(line, hide_text);
 
 	printf("Censored text: %s\n", line);
 	return 0;
@@ -72,41 +72,42 @@ void capitalise(int n, char str[n])
 	return;
 }
 
-/** Search for 'hide' in str, replace  all occurrances with 'x'
+/** Search for 'hide' in 'str', replace  all occurrances with 'x's
  */
-void censor(const char hide[], char str[])
+void censor(char *str, const char *hide)
 {
-	int hide_len, str_len;
+	char *p = str;
+	const char *q = hide;
 
-	puts("hide:");
-	puts(hide);
+	/* p is set to the beginning of the location that 'hide'
+	 * is found to occur in 'str'
+	 */
+	while ((p = strstr(p, q))) { /* true while 'hide' is found in 'str' */
+		while(*q++)		/* For each character in 'hide', */
+			*p++ = 'x';	/* place 'x' into 'str' */
+		q = hide; /* reset q to point to 'hide' */
+	}
+	return;
+}
+
+/* Another possible method to replace a word within a string
+void censor(char *str, const char *hide)
+{
+	char *p = str;
+	const char *q = hide;
+*/
+	/* Create the censor string (x's) to strikeout matching text */
+/*
+	int hide_len, i;
 	hide_len = strlen(hide);
-	printf("hide_len: %d\n", hide_len);
-
 	char strikeout[hide_len + 1];
-	char *p = hide;
-	char *q = strikeout;
-	while (*p++)
-		*q++ = 'x';
-	*q = '\0';
-	int strikeout_len = strlen(strikeout);
-	printf("strikeout_len: %d\n", strikeout_len);
-	puts("strikeout:");
-	puts(strikeout);
-
-	puts("str:");
-	puts(str);
-	str_len = strlen(str);
-	printf("str_len: %d\n", str_len);
-
-	p = str;
-	p = strstr(str, hide);
-	strncpy(p, strikeout, strikeout_len);
-	while (p = strstr(p, hide))
-		strncpy(p, strikeout, strikeout_len);
-
-	/* now use strstr to find hide in str */
-	/* use strncpy to replace hide in str with 'x's */
+	for (i = 0; i < hide_len; ++i)
+		strikeout[i] = 'x';
+	strikeout[i] = '\0';
+	while (p = strstr(p, hide)) {
+		strncpy(p, strikeout, hide_len);
 
 	return;
 }
+
+*/

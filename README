@@ -81,3 +81,18 @@ $ git pull origin
 or even:
 $ git pull
 
+Some useful vim settings:
+--------------------------
+
+/* vim: tabstop=8:softtabstop=8:shiftwidth=8:noexpandtab:cindent:nu:sm:cursorline */ 
+set 
+cindent
+nu
+sm
+tabstop=8
+softtabstop=8
+shiftwidth=8
+noexpandtab
+cursorline
+
+
