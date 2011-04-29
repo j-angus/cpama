@@ -3,18 +3,24 @@
  * By K. N. King					 *
  *********************************************************/
 
-/* Write a program named reverse.c that echoes its command-line arguments in
- * reverse order.
+/* Write a program named sum.c that adds up its command-line arguments, which
+ * are assumed to be integers.
  */
-#define THIS_FILE "ch13pp02.c, page 312"
+#define THIS_FILE "ch13pp05.c, page 312"
 #define PRINT_FILE_INFO \
 	printf("C Programming, A Modern Approach: %s\n", THIS_FILE);
 
 #include <stdio.h>
+#include <stdlib.h> /*  for atoi() */
 
 int main(int argc, char **argv)
 {	PRINT_FILE_INFO
-	for (int i = argc-1; i > 0; --i)
-		printf("%s%c", argv[i], i != 0 ? ' ' : '\n');
+	int i, total = 0;
+
+	for (i = 0; i < argc; ++i)
+		total += atoi(argv[i]);
+
+	printf("Total: %d\n", total);
+
 	return 0;
 }
