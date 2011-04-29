@@ -2,13 +2,14 @@
  * From C PROGRAMMING: A MODERN APPROACH, Second Edition *
  * By K. N. King					 *
  *********************************************************/
-
-#define THIS_FILE "ch13ex17.c, page 310"
+#define THIS_FILE "ch13pp01c, page 311"
 #define PRINT_FILE_INFO \
 	printf("C Programming, A Modern Approach: %s\n", THIS_FILE);
 
-/* Write a program that finds the largest and smallest of a series of words.
- * Stops accepting input when four letter word entered.
+/**
+ * Write a program that finds the "smallest" and "largest" in a series of words.
+ * After the user enters the words, the program will determine which words
+ * would come first and last if the words were listed in dictionary order.
  */
 
 #include <stdbool.h> /* C99 only */
@@ -33,41 +34,36 @@ bool test_extension(const char *file_name, const char *extension);
  ********************************************************/
 int main(void)
 {	PRINT_FILE_INFO
-	char file_name[] = "memo.txt";
-	char extension[] = "TXT";
+	char current_word[WORD_LEN + 1],
+		smallest_word[WORD_LEN + 1],
+		largest_word[WORD_LEN + 1];
 
-	printf("Is %s the file extension of %s? %s\n", extension, file_name,
-			test_extension(file_name, extension) ? "Yes" : "No");
+	/* Initialise smallest and largest _words: */
+	printf("Enter word: ");
+	read_line(current_word, WORD_LEN);
+	strcpy(smallest_word, strcpy(largest_word, current_word));
+
+	while (strlen(current_word) != 4) {
+		printf("Enter word: ");
+		read_line(current_word, WORD_LEN);
+
+		if (strcmp(current_word, smallest_word) < 0)
+			strcpy(smallest_word, current_word);
+		if (strcmp(current_word, largest_word) > 0)
+			strcpy(largest_word, current_word);
+	}
+	printf("Smallest word: %s\n", smallest_word);
+	printf("Largest word: %s\n", largest_word);
 	return 0;
 }
 
 /* function definitions */
 
-bool test_extension(const char *file_name, const char *extension)
-{
-	bool match = false;
-	const char *e = extension;
-
-	/* search backwards from end of file_name and extension,
-	 * comparing chars. Any non-matches fails check.
-	 * If no period found in file_name, search fails.
-	 */
-	 if (strlen(extension) < (strlen(file_name) + 1)) {
-		/* Locate the end of file_name */
-		while (*file_name)
-			file_name++;
-		/* Locate the end of extension */
-		while (*e)
-			e++;
-		while (toupper(*file_name) == toupper(*e)) {
-			if (e == extension && *(file_name - 1) == '.')
-				match = true;
-			--file_name, --e;
-		}
-	}
-	return match;
-}
-
+/**
+ * Reads a line of characters ignoring leading whitespace, storing them in str[]
+ * Discards '\n' and appends '\0' to end of text.
+ * Returns the numbers of chars stored in str[]
+ */
 int read_line(char str[], int n)
 {
 	int ch, i = 0;
@@ -79,6 +75,8 @@ int read_line(char str[], int n)
 		if (i < n) {
 			str[i++] = ch;
 		}
+		else
+			break;
 	}
 	str[i] = '\0'; /* terminate string */
 

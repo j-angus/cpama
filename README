@@ -81,6 +81,11 @@ $ git pull origin
 or even:
 $ git pull
 
+Recovering a deleted file (before committing):
+-----------------------------------------------
+git checkout HEAD  -- <filename>
+
+
 Some useful vim settings:
 --------------------------
 
