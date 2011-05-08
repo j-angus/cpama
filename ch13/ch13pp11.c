@@ -2,14 +2,13 @@
  * From C PROGRAMMING: A MODERN APPROACH, Second Edition
  * By K. N. King
  *********************************************************/
-#define THIS_FILE "ch13pp01c, page 311"
+#define THIS_FILE "ch13pp11c, page 312"
 #define PRINT_FILE_INFO \
 	printf("C Programming, A Modern Approach: %s\n", THIS_FILE);
 
 /**
- * Write a program that finds the "smallest" and "largest" in a series of words.
- * After the user enters the words, the program will determine which words
- * would come first and last if the words were listed in dictionary order.
+ * Modify ch07pp13 so that it includes function:
+ * double compute_average(const char *sentence);
  */
 
 #include <stdbool.h> /* C99 only */
@@ -20,13 +19,13 @@
 #include <string.h>
 
 /* defines */
-#define WORD_LEN 20
+#define SENT_LEN 80
 
 /* external variables */
 
 /* function prototypes */
+double compute_average(const char *sentence);
 int read_line(char str[], int n);
-bool test_extension(const char *file_name, const char *extension);
 
 /* main() */
 /********************************************************
@@ -34,30 +33,45 @@ bool test_extension(const char *file_name, const char *extension);
  ********************************************************/
 int main(void)
 {	PRINT_FILE_INFO
-	char current_word[WORD_LEN + 1],
-		smallest_word[WORD_LEN + 1],
-		largest_word[WORD_LEN + 1];
+	char sentence[SENT_LEN+1];
+	double avg_wordlen = 0;
 
-	/* Initialise smallest and largest _words: */
-	printf("Enter word: ");
-	read_line(current_word, WORD_LEN);
-	strcpy(smallest_word, strcpy(largest_word, current_word));
-
-	while (strlen(current_word) != 4) {
-		printf("Enter word: ");
-		read_line(current_word, WORD_LEN);
-
-		if (strcmp(current_word, smallest_word) < 0)
-			strcpy(smallest_word, current_word);
-		if (strcmp(current_word, largest_word) > 0)
-			strcpy(largest_word, current_word);
-	}
-	printf("Smallest word: %s\n", smallest_word);
-	printf("Largest word: %s\n", largest_word);
+	printf("Enter a sentence: ");
+	read_line(sentence, sizeof(sentence));
+	avg_wordlen = compute_average(sentence);
+	printf("Average word length: %0.1lf\n", avg_wordlen);
 	return 0;
 }
 
 /* function definitions */
+
+/**
+ * compute the average word length within sentence
+ */
+double compute_average(const char *sentence)
+{
+	int wordlen = 0;
+	int num_words = 0;
+
+	while (*sentence) { /* assume sentence '\0' terminated */
+		/* tally total characters as long as they are alpha */
+		if (isalpha(*sentence)) {
+			++wordlen;
+			++sentence;
+		} else {
+			/* increment num_words when we read a non-alpha char */
+			++num_words;
+			/* skip past non-alpha chars */
+			while (!isalpha(*sentence) && *sentence)
+				sentence++;
+		}
+	}
+
+	if (num_words)
+		return (float) wordlen / num_words;
+	else
+		return 0;
+}
 
 /**
  * Reads a line of characters ignoring leading whitespace, storing them in str[]
@@ -72,7 +86,8 @@ int read_line(char str[], int n)
 		if (i == 0) /* skip leading whitespace */
 			if (isspace(ch))
 				continue;
-		if (i < n) {
+		/* we want to store at max n-1 chars into str[] */
+		if (i < n-1) {
 			str[i++] = ch;
 		}
 		else
