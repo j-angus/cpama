@@ -7,8 +7,7 @@
 	printf("C Programming, A Modern Approach: %s\n", THIS_FILE);
 
 /**
- * Modify ch08pp14 so that it includes function:
- * double compute_average(const char *sentence);
+ * Modify ch08pp14 so that it stores the words in a two-dimensional array
  */
 
 #include <stdbool.h> /* C99 only */
