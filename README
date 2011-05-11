@@ -3,9 +3,7 @@ setup git repository for storing 'c' source code.
 
 Main repository is stored on GitHub server: github.com
 
-ssh passwd: guitarz1i
 github login: j-angus 
-github passwd: guitarz1
 
 setup git:
 ------------
