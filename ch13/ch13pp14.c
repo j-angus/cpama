@@ -21,6 +21,7 @@
 
 #define MAX_WORD_LEN 80
 #define ALPHABET 26
+
 /* function prototypes */
 bool are_anagrams(const char *word1, const char *word2);
 int read_line(char str[], int n);
