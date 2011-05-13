@@ -37,6 +37,7 @@ int main(void)
 	char sentence[SENT_LEN+1];
 	int i = 0;
 	char *word_store[WORD_MAX];
+	char store[WORD_MAX][WORD_LEN];
 	char *p = sentence, *q = p;
 	char endsen = '\0';
 
@@ -62,6 +63,8 @@ int main(void)
 
 			if (i < (WORD_MAX - 1)) {
 				/* strcpy(word_store[i++], p); */
+				/* store[i] = p; */
+				strncpy(store[i], p, WORD_LEN);
 				word_store[i++] = p;
 				while (*q && isspace(*q)) /* skip whitespace */
 					++q;
@@ -70,14 +73,22 @@ int main(void)
 			}
 			else
 				break; /* word_store full */
-		} else
+		} else {
 			word_store[i] = p;
+			strncpy(store[i], p, WORD_LEN);
+		}
 	}
-
+	int j = i;
 	printf("Reversal of sentence:\n");
 	for ( ; 0 <= i; --i)
 		printf("%s%c", word_store[i], 0 < i ? ' ' : '\0');
 	printf("%c\n", endsen ? endsen : '\0');
+
+	printf("Reversal of sentence (using store[]):\n");
+	for ( ; 0 <= j; --j)
+		printf("%s%c", store[j], 0 < j ? ' ' : '\0');
+	printf("%c\n", endsen ? endsen : '\0');
+
 	return 0;
 }
 
