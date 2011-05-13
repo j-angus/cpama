@@ -19,7 +19,7 @@
 #include <string.h>
 
 #define STACK_SIZE 100
-
+#define RPNEXP_LENGTH 80 /* max length of user input rpn expression */
 /* external variables */
 int contents[STACK_SIZE];
 int top = 0;
@@ -39,9 +39,12 @@ int read_line(char str[], int n);
 int main(void)
 {	PRINT_FILE_INFO
 	char ch;
+	char rpn_expression[RPNEXP_LENGTH+1];
 	char input[2] = {'\0', '\0'};
+	int val1, val2;
 
 	printf("Enter an RPN expression: ");
+
 	while ((ch = getchar()) != '=') {
 		*input = ch;
 		if (isdigit(ch)) {
@@ -53,13 +56,17 @@ int main(void)
 				push(pop() + pop());
 				break;
 			case '-':
-				push(pop() - pop());
+				val1 = pop();
+				val2 = pop();
+				push(val2 - val1);
 				break;
 			case '*':
 				push(pop() * pop());
 				break;
 			case '/':
-				push(pop() / pop());
+				val1 = pop();
+				val2 = pop();
+				push(val2 / val1);
 				break;
 			default:
 				/* not a valid operator */
