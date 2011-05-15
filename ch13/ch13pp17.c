@@ -56,7 +56,7 @@ bool is_palindrome(const char *message)
 	if (message > p) { /* check that message isn't just a single NUL */
 		q = --message; /* set *q to char before NUL terminator */
 
-		/* swap characters */
+		/* compare characters */
 		while (p < q) {
 			if (*p != *q) {
 				is_pal = false;
