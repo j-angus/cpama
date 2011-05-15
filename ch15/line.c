@@ -52,7 +52,9 @@ void write_line(void)
     if (line[i] != ' ')
       putchar(line[i]);
     else {
-      spaces_to_insert = extra_spaces / (num_words - 1);
+       spaces_to_insert = extra_spaces / (num_words - 1);
+       if ((extra_spaces > 1) && (num_words % 2))
+			++spaces_to_insert;
       for (j = 1; j <= spaces_to_insert + 1; j++)
         putchar(' ');
       extra_spaces -= spaces_to_insert;
