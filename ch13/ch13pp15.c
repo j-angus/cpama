@@ -19,7 +19,7 @@
 #include <string.h>
 
 #define STACK_SIZE 100
-
+#define RPNEXP_LENGTH 80 /* max length of user input rpn expression */
 /* external variables */
 int contents[STACK_SIZE];
 int top = 0;
@@ -34,52 +34,68 @@ void stack_overflow(void);
 void stack_underflow(void);
 
 int evaluate_RPN_expression(const char *expression);
-int read_line(char str[], int n);
+int read_line(char *str, int n);
 
 int main(void)
 {	PRINT_FILE_INFO
-	char ch;
-	char input[2] = {'\0', '\0'};
-	int result = 0;
+	char rpn_express[RPNEXP_LENGTH+1]; /* user input RPN expression */
 
-	printf("Enter an RPN expression: ");
-	while ((ch = getchar()) != '=') {
-		*input = ch;
-		if (isdigit(ch)) {
-			push(atoi(input));
+	/* loop until user does not enter a valid expression */
+	while(true) {
+		printf("Enter an RPN expression: ");
+		read_line(rpn_express, sizeof(rpn_express));
+		printf("Value of expression: %d\n", evaluate_RPN_expression(rpn_express));
+	}
+	return 0;
+}
+
+/* function definitions */
+
+/**
+ * Evaluates an RPN expression.
+ * *expression is a NUL terminated string
+ * returns the result of the expression
+ * only evaluates single integer digits, 0 - 9
+ */
+int evaluate_RPN_expression(const char *expression)
+{
+	char in_str[2] = {'\0', '\0'}; /* store char converted to string */
+	int val1, val2; /* store popped values */
+
+	while (*expression) {
+		*in_str = *expression;
+		if (isdigit(*expression)) {
+			push(atoi(in_str));
 		}
 		else {
-			switch(ch) {
+			switch(*expression) {
 			case '+':
 				push(pop() + pop());
 				break;
 			case '-':
-				push(pop() - pop());
+				val1 = pop();
+				val2 = pop();
+				push(val2 - val1);
 				break;
 			case '*':
 				push(pop() * pop());
 				break;
 			case '/':
-				push(pop() / pop());
+				val1 = pop();
+				val2 = pop();
+				push(val2 / val1);
 				break;
+			case '=':
+				return pop();
 			default:
 				/* not a valid operator */
 				break;
 			}
 		}
+		++expression;
 	}
-	printf("Value of expression: %d\n", pop());
-
-	return 0;
-}
-
-/* function prototypes */
-
-int evaluate_RPN_expression(const char *expression)
-{
-
-
-	return 0;
+	printf("ERROR: expression did not end with '='\n");
+	exit(-1); /* error, not a valid expression */
 }
 
 void make_empty(void)
@@ -130,9 +146,10 @@ void stack_underflow(void)
 /**
  * Reads a line of characters ignoring leading whitespace, storing them in str[]
  * Discards '\n' and appends '\0' to end of text.
- * Returns the numbers of chars, i, stored in str[]
+ * Returns the numbers of chars, i, stored in *str
+ * 'n' is expected to be the size of the char array pointed to by *str
  */
-int read_line(char str[], int n)
+int read_line(char *str, int n)
 {
 	int ch, i = 0;
 
