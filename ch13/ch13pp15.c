@@ -40,6 +40,7 @@ int main(void)
 {	PRINT_FILE_INFO
 	char ch;
 	char input[2] = {'\0', '\0'};
+	int result = 0;
 
 	printf("Enter an RPN expression: ");
 	while ((ch = getchar()) != '=') {
