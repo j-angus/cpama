@@ -1,11 +1,15 @@
-ch17ex01: ch17ex01.o ../lib/my_functions.o
-	gcc -o ../bin/ch17ex01 ch17ex01.o ../lib/my_functions.o
+## Call make with MAIN:=filename as argument
+CC = gcc
+CFLAGS = -g -Wall -std=c99 -pedantic
 
-ch17ex01.o: ch17ex01.c ../lib/my_functions.h
-	gcc -c ch17ex01.c
+$(MAIN): $(MAIN).o ../lib/my_functions.o
+	$(CC) $(CFLAGS) -o ../bin/$(MAIN) $(MAIN).o ../lib/my_functions.o
+
+$(MAIN).o: $(MAIN).c ../lib/my_functions.h
+	$(CC) $(CFLAGS) -c $(MAIN).c
 
 my_functions.o: ../lib/my_functions.c ../lib/my_functions.h
-	gcc -c ../lib/my_functions.c
+	$(CC) $(CFLAGS) -c ../lib/my_functions.c
 
 
 
