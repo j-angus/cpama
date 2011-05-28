@@ -1,6 +1,11 @@
 ## Call make with MAIN:=filename as argument
+
 CC = gcc
-CFLAGS = -g -Wall -std=c99 -pedantic
+CFLAGS = -g -Wall -std=gnu99 -pedantic
+FILE = ch17ex06
+
+$(FILE): $(FILE).o ../lib/my_functions.o
+	$(CC) $(CFLAGS) -o ../bin/$(FILE) $(FILE).o ../lib/my_functions.o
 
 $(MAIN): $(MAIN).o ../lib/my_functions.o
 	$(CC) $(CFLAGS) -o ../bin/$(MAIN) $(MAIN).o ../lib/my_functions.o
