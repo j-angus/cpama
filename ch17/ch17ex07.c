@@ -1,4 +1,4 @@
-/* ch17ex04.c */
+/* ch17ex07.c */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,11 +11,9 @@ struct node {
 };
 
 struct node *add_to_list(struct node *list, int n);
-
 struct node *read_numbers(void);
-
 struct node *delete_from_list(struct node *list, int n);
-
+struct node * delete_list(struct node *list);
 void print_list(struct node *list);
 
 int main (void)
@@ -25,6 +23,8 @@ int main (void)
 	anode = read_numbers();
 	print_list(anode);
 	anode = delete_from_list(anode, 20);
+	print_list(anode);
+	anode = delete_list(anode);
 	print_list(anode);
 	return 0;
 }
@@ -47,6 +47,11 @@ struct node *add_to_list(struct node *list, int n)
 
 void print_list(struct node *list)
 {
+	if (list == NULL) {
+		printf("Empty list.\n");
+		return;
+	}
+
 	for (; list != NULL; list = list->next) {
 		printf("list->value: %d\n", list->value);
 		/*
@@ -104,4 +109,31 @@ struct node *delete_from_list(struct node *list, int n)
 	/* n not found */
 	printf("'%d' not found.\n", n);
 	return first;
+}
+
+struct node *delete_list(struct node *list)
+{
+	struct node *p = list, *q;
+
+	for (; p != NULL; p = p->next) {
+		printf("Before free(), p: %p, p->next: %p\n", p, p->next);
+		if (p->next)
+			printf("p->value: %d, p->next->value: %d\n", p->value, p->next->value);
+		printf("Freeing node p: %p\n", p);
+		free(p);
+		printf("After free(), p: %p, p->next: %p\n", p, p->next);
+		if (p->next)
+			printf("p->value: %d, p->next->value: %d\n", p->value, p->next->value);
+	}
+	/*
+	while (p != NULL) {
+		q = p;
+		p = p->next;
+		printf("Before free(), p: %p, q: %p\n", p, q);
+		printf("Freeing node q: %p\n", q);
+		free(q);
+		printf("After free(), p: %p, q: %p\n", p, q);
+	}
+*/
+	return p;
 }
