@@ -1,4 +1,4 @@
-/* ch17ex08.c */
+/* ch17ex11.c */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,18 +8,16 @@
 
 void read_numbers(void);
 void print_list(struct node *list);
+int count_occurrences(struct node *list, int n);
 
 int main (void)
 {
+	int num = 5;
+
 	read_numbers();
 	print_list(top);
-	printf("pop(): %d\n", pop());
-	print_list(top);
-	printf("pop(): %d\n", pop());
-	print_list(top);
-	make_empty();
-	print_list(top);
-	printf("pop(): %d\n", pop());
+	printf("%d found: %d\n", num, count_occurrences(top, num));
+
 	return 0;
 }
 
@@ -51,4 +49,13 @@ void read_numbers(void)
 			break;
 	}
 	return;
+}
+
+int count_occurrences(struct node *list, int n)
+{
+	int found = 0;
+	for (; list != NULL; list = list->next)
+		if (list->value == n)
+			++found;
+	return found;
 }
