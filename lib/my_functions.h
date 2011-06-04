@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #define MAX_LEN 80
+
 /**
  * read_line:
  *

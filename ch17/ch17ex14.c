@@ -1,4 +1,4 @@
-/* ch17ex13.c */
+/* ch17ex14.c */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +11,7 @@ void print_list(struct node *list);
 int count_occurrences(struct node *list, int n);
 struct node *find_last(struct node *list, int n);
 struct node *insert_into_ordered_list(struct node *list, struct node *new_node);
+struct node *delete_from_list(struct node *list, int n);
 
 int main (void)
 {
@@ -25,6 +26,7 @@ int main (void)
 	top = insert_into_ordered_list(top, my_node);
 	print_list(top);
 	print_list(find_last(top, 2));
+	print_list(delete_from_list(top, num));
 
 	return 0;
 }
@@ -99,5 +101,24 @@ struct node *insert_into_ordered_list(struct node *list, struct node *new_node)
 			prev->next = new_node;
 			new_node->next = cur;
 	}
+	return list;
+}
+
+struct node *delete_from_list(struct node *list, int n)
+{
+	struct node *cur, *prev;
+
+	for (cur = list, prev = NULL;
+		cur != NULL && cur->value != n;
+		prev = cur, cur = cur->next)
+		;
+
+	if (cur == NULL)
+		return list; /* n was not found */
+	if ( prev == NULL)
+		list = list->next; /* n is in the first node */
+	else
+		prev->next = cur->next; /* n is in some other node */
+	free(cur);
 	return list;
 }

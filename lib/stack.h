@@ -1,6 +1,7 @@
-/* stack.h */
-/* for cpama ch17ex08, page 454 */
-/* implement a stack using linke lists */
+/** stack.h
+ * for cpama ch17ex08, page 454
+ * implement a stack using linke lists
+ */
 
 #ifndef STACK_H
 #define STACK_H
