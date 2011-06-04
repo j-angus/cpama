@@ -6,9 +6,13 @@
 
 void make_empty(void)
 {
-	for (; top != NULL; top = top->next)
-		free(top);
-	return;
+	struct node *temp;
+
+	while (top != NULL) {
+		temp = top;
+		top = top->next;
+		free(temp);
+	}
 }
 
 bool is_empty(void)
@@ -22,7 +26,6 @@ bool push(int i)
 
 	new_node = malloc(sizeof(struct node));
 	if (new_node == NULL) {
-		stack_overflow();
 		return false;
 	}
 
@@ -35,28 +38,18 @@ bool push(int i)
 
 int pop(void)
 {
-	struct node *p;
-
+	struct node *temp;
+	int i;
 	if (is_empty()) {
-		stack_underflow();
-		exit(1);
+		printf("*** Stack underflow; program terminated. ***\n");
+		exit(EXIT_FAILURE);
 	}
 
-	int i = top->value;
-	p = top;
+	i = top->value;
+	temp = top;
 	top = top->next;
-	free(p);
+	free(temp);
+
 	return i;
 }
 
-void stack_overflow(void)
-{
-	printf("ERROR: stack_overflow, not enough memory.\n");
-	exit(1);
-}
-
-void stack_underflow(void)
-{
-	printf("ERROR: stack_underflow, Stack empty.\n");
-	exit(1);
-}
