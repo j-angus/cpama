@@ -11,7 +11,7 @@ void print_list(struct node *list);
 int count_occurrences(struct node *list, int n);
 struct node *find_last(struct node *list, int n);
 struct node *insert_into_ordered_list(struct node *list, struct node *new_node);
-struct node *delete_from_list(struct node *list, int n);
+void delete_from_list(struct node **list, int n);
 
 int main (void)
 {
@@ -26,7 +26,8 @@ int main (void)
 	top = insert_into_ordered_list(top, my_node);
 	print_list(top);
 	print_list(find_last(top, 2));
-	print_list(delete_from_list(top, num));
+	delete_from_list(&top, num);
+	print_list(top);
 
 	return 0;
 }
@@ -86,13 +87,9 @@ struct node *insert_into_ordered_list(struct node *list, struct node *new_node)
 {
 	struct node *cur = list, *prev = NULL;
 
-	printf("DEBUG: insert_into_ordered_list()\n");
-
 	for (; cur != NULL && (cur->value <= new_node->value);
-						prev = cur, cur = cur->next)
+		prev = cur, cur = cur->next)
 		;
-
-	printf("DEBUG: insert_into_ordered_list(), finished while()\n");
 
 	if (prev == NULL) { /* value smaller than first node value */
 		new_node->next = list;
@@ -104,21 +101,20 @@ struct node *insert_into_ordered_list(struct node *list, struct node *new_node)
 	return list;
 }
 
-struct node *delete_from_list(struct node *list, int n)
+void delete_from_list(struct node **list, int n)
 {
 	struct node *cur, *prev;
 
-	for (cur = list, prev = NULL;
+	for (cur = *list, prev = NULL;
 		cur != NULL && cur->value != n;
 		prev = cur, cur = cur->next)
 		;
-
 	if (cur == NULL)
-		return list; /* n was not found */
+		return; /* n was not found */
 	if ( prev == NULL)
-		list = list->next; /* n is in the first node */
+		*list = (*list)->next; /* n is in the first node */
 	else
 		prev->next = cur->next; /* n is in some other node */
 	free(cur);
-	return list;
+	return;
 }
