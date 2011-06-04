@@ -1,33 +1,37 @@
 /* ch17ex17.c */
 
 #include <stdio.h>
+#include <stdlib.h>
 
-int sum(int (*f)(int), int start, int end);
-int g(int x);
+#define LENGTH 100
+
+int compare_int(const void *x, const void *y);
 
 int main (void)
 {
-	int i = 1, j = 10;
+	int a[LENGTH]; /* = {9, 1, 2, 8, 7, 4, 6, 5, 0, 3}; */
+	int i;
 
-	printf("Sum of range %d - %d\n", i, j);
-	sum(g, i, j)
-	;
+	for (i = 0; i < LENGTH; ++i)
+		printf("a[%d] = %d\n", i, a[i]);
+
+	qsort(&a[LENGTH/2], LENGTH - (LENGTH/2), sizeof(a[0]), compare_int);
+
+	for (i = 0; i < LENGTH; ++i)
+		printf("a[%d] = %d\n", i, a[i]);
+
 	return 0;
 }
 
-int sum(int (*f)(int), int start, int end)
+/**
+ * compare_int: returns x < y: -1
+ * 			x == y: 0
+ * 			x > y: +1
+ */
+int compare_int(const void *x, const void *y)
 {
-	int total = 0;
+	const int *x1 = x;
+	const int *y1 = y;
 
-	for (; start <= end; ++start) {
-		printf("total = %d + %d\n", total, g(start));
-		total += g(start);
-		printf("total = %d\n", total);
-	}
-	return total;
-}
-
-int g(int x)
-{
-	return x;
+	return ((*x1 < *y1) ? -1 : ((*x1 == *y1) ? 0 : 1));
 }
