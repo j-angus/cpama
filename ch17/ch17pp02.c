@@ -1,11 +1,11 @@
 /*********************************************************
  * From C PROGRAMMING: A MODERN APPROACH, Second Edition *
- * By K. N. King																				 *
+ * By K. N. King					 *
  *********************************************************/
 
-/* ch17pp01.c */
-/* Modify program so that the inventory array is allocated dynamically and
- * later reallocated when it fills up.
+/* ch17pp02.c */
+/* Modify program so that the p (print) command calls qsort to sort the
+ * inventory array before printing the parts.
  */
 /* Based on inventory.c (Chapter 16, page 391) */
 /* Maintains a parts database (array version) */
@@ -33,6 +33,7 @@ void insert(void);
 void search(void);
 void update(void);
 void print(void);
+int compare(const void *p, const void *q);
 
 /**********************************************************
  * main: Prompts the user to enter an operation code,	  *
@@ -94,14 +95,17 @@ int find_part(int number)
 void insert(void)
 {
 	int part_number;
-	int extra_parts = 2;
+	int new_size = invent_size + 2;
+	struct part *temp;
+
 	if (num_parts == invent_size) {
-		realloc(inventory, ((invent_size * sizeof(struct part)) +
-					(extra_parts * sizeof(struct part))));
-		/*
-					(sizeof(struct part) * invent_size)));
-		*/
-		invent_size += extra_parts;
+		temp = realloc(inventory, (new_size * sizeof(struct part)));
+		if (temp == NULL) {
+			printf("Insufficient memory; can't add more parts.\n");
+			return;
+		}
+		invent_size = new_size;
+		inventory = temp;
 		printf("Added room for more parts.\n");
 	}
 
@@ -173,8 +177,25 @@ void print(void)
 {
 	int i;
 
+	qsort(inventory, num_parts, sizeof(inventory[0]), compare);
 	printf("Part Number\t\tPart Name\t\t\tQuantity on Hand\n");
 	for (i = 0; i < num_parts; i++)
-		printf("%7d\t%-25\ts%11d\n", inventory[i].number,
+		printf("%7d\t\t\t%-25s\t%11d\n", inventory[i].number,
 				 inventory[i].name, inventory[i].on_hand);
+}
+
+/**
+ * compare_int: returns x < y: -1
+ * 			x == y: 0
+ * 			x > y: +1
+ */
+int compare(const void *p, const void *q)
+{
+	int x = ((struct part *) p)->number;
+	int y = ((struct part *) q)->number;
+
+	/* x < y = -1: sort ascending order */
+	/* x > y = -1: sort descending order */
+	/* return ((*x1 < *y1) ? -1 : ((*x1 == *y1) ? 0 : 1)); */
+	return ((x < y) ? -1 : ((x == y) ? 0 : 1));
 }
