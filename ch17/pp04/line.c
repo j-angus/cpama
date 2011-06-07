@@ -47,18 +47,17 @@ void clear_line(void)
 
 void add_word(const char *word)
 {
-  if (num_words > 0) {
-    line[line_len] = ' ';
-    line[line_len+1] = '\0';
-    line_len++;
-  }
+	if (num_words > 0)
+		++line_len;  /* count spaces after words */
+
 	if (first_word == NULL) { /* adding first word to first_word */
 		first_word = malloc(sizeof(struct a_word));
 		if (first_word != NULL) {
 			strcpy(first_word->word, word);
-			first_word->dyn_word = malloc(sizeof(word)+1);
-			strcpy(first_word->dyn_word, word);
-			/* first_word->word = word; */
+			/* first_word->dyn_word = malloc(sizeof(word)+1);
+			 * strcpy(first_word->dyn_word, word);
+			 */
+			strcpy(first_word->word, word);
 			first_word->next = NULL;
 			cur_word = first_word;
 		} else {
@@ -69,9 +68,10 @@ void add_word(const char *word)
 		struct a_word *temp = malloc(sizeof(struct a_word));
 		if (temp != NULL) {
 			strcpy(temp->word, word);
-			temp->dyn_word = malloc(sizeof(word)+1);
-			strcpy(temp->dyn_word, word);
-			/* temp->word = word; */
+			/* temp->dyn_word = malloc(sizeof(word)+1);
+			 * strcpy(temp->dyn_word, word);
+			 */
+			strcpy(temp->word, word);
 			temp->next = NULL;
 			cur_word->next = temp;
 			cur_word = temp;
@@ -80,9 +80,8 @@ void add_word(const char *word)
 			exit(1);
 		}
 	}
-  strcat(line, word);
-  line_len += strlen(word);
-  num_words++;
+	line_len += strlen(word);
+	num_words++;
 }
 
 int space_remaining(void)
@@ -92,26 +91,21 @@ int space_remaining(void)
 
 void write_line(void)
 {
-  int extra_spaces, spaces_to_insert, i, j;
+	int extra_spaces, spaces_to_insert, i;
 
-  extra_spaces = MAX_LINE_LEN - line_len;
-  for (i = 0; i < line_len; i++) {
-    if (line[i] != ' ')
-      putchar(line[i]);
-    else {
-      spaces_to_insert = extra_spaces / (num_words - 1);
-      for (j = 1; j <= spaces_to_insert + 1; j++)
-        putchar(' ');
-      extra_spaces -= spaces_to_insert;
-      num_words--;
-    }
-  }
-  putchar('\n');
-	printf("Now we will write the line using the linked list:\n");
+	extra_spaces = MAX_LINE_LEN - line_len;
 	struct a_word *line_out = first_word;
 	for ( ; line_out != NULL; line_out = line_out->next) {
-		printf("line_out: %p, ", (void *)line_out);
-		printf("%s\n", line_out->word);
+		printf("%s", line_out->word);
+		if (line_out->next != NULL) {
+			putchar(' ');
+			spaces_to_insert = extra_spaces / (num_words - 1);
+			for (i = 0 ; i < spaces_to_insert; i++) {
+				putchar(' ');
+			}
+			extra_spaces -= spaces_to_insert;
+			--num_words;
+		}
 	}
 	printf("\n");
 }
@@ -119,12 +113,9 @@ void write_line(void)
 void flush_line(void)
 {
   if (line_len > 0) {
-    puts(line);
-	printf("Now we will write the line using the linked list:\n");
 	struct a_word *line_out = first_word;
 	for ( ; line_out != NULL; line_out = line_out->next) {
-		printf("line_out: %p, ", (void *)line_out);
-		printf("%s\n", line_out->dyn_word);
+		printf("%s\n", line_out->word);
 	}
   }
 }
