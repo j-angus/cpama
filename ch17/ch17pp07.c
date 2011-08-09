@@ -23,7 +23,6 @@ struct vstring {
 	char chars[];
 };
 
-
 int read_line(char str[], size_t n);
 
 int main(void)
